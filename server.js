@@ -46,6 +46,35 @@ mongoose.connect(MONGODB_URI, {
   console.error('MongoDB connection error:', err);
 });
 
+// Add this BEFORE your other routes in app.js
+app.get('/create-admin', async (req, res) => {
+    try {
+        const bcrypt = require('bcryptjs');
+        const User = require('./models/User');
+        
+        // Check if admin already exists
+        const existingAdmin = await User.findOne({ username: 'Ntando' });
+        if (existingAdmin) {
+            return res.send('Admin user already exists! Try logging in with username: Ntando, password: Ntando');
+        }
+        
+        // Create new admin user
+        const hashedPassword = await bcrypt.hash('Ntando', 12);
+        const admin = new User({
+            username: 'Ntando',
+            password: hashedPassword,
+            role: 'admin'
+        });
+        
+        await admin.save();
+        res.send('Admin user created successfully! Username: Ntando, Password: Ntando');
+    } catch (error) {
+        console.error('Error creating admin:', error);
+        res.send('Error creating admin: ' + error.message);
+    }
+});
+
+
 // Routes
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
