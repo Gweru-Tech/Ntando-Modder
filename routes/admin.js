@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
       const hashedPassword = await bcrypt.hash('Ntando', 10);
       user = new User({
         username: 'Ntando',
-        password: hashedPassword
+        password: 'Ntando'
       });
       await user.save();
       console.log('Default admin user created');
